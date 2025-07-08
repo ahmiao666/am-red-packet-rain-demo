@@ -1,20 +1,32 @@
 # 红包雨组件 React & Vue 使用指南
 
 ## 目录
-- [简介](#简介)
-- [React 组件用法](#react-组件用法)
-  - [Props 参数说明](#props-参数说明)
-  - [Ref 方法说明](#ref-方法说明)
-  - [类型定义](#类型定义)
-  - [完整示例](#完整示例)
-  - [事件回调用法](#事件回调用法)
-- [Vue 组件用法](#vue-组件用法)
-  - [Props 参数说明](#props-参数说明-1)
-  - [暴露方法说明](#暴露方法说明)
-  - [类型定义](#类型定义-1)
-  - [完整示例](#完整示例-1)
-  - [事件回调用法](#事件回调用法-1)
-- [常见问题与注意事项](#常见问题与注意事项)
+- [红包雨组件 React \& Vue 使用指南](#红包雨组件-react--vue-使用指南)
+  - [目录](#目录)
+  - [简介](#简介)
+  - [React 组件用法](#react-组件用法)
+    - [引入方式](#引入方式)
+      - [1. 安装依赖](#1-安装依赖)
+      - [2. 组件引入](#2-组件引入)
+      - [3. Vite/Webpack/TS 支持](#3-vitewebpackts-支持)
+    - [Props 参数说明](#props-参数说明)
+    - [Ref 方法说明](#ref-方法说明)
+    - [类型定义](#类型定义)
+      - [RedPacketRainConfig 配置参数](#redpacketrainconfig-配置参数)
+      - [RedPacket 红包对象](#redpacket-红包对象)
+      - [RedPacketClickEvent 点击事件参数](#redpacketclickevent-点击事件参数)
+      - [AnimationState 动画状态](#animationstate-动画状态)
+      - [PerformanceStats 性能统计](#performancestats-性能统计)
+      - [Particle 粒子对象](#particle-粒子对象)
+      - [ParticleConfig 粒子配置](#particleconfig-粒子配置)
+    - [完整示例](#完整示例)
+    - [事件回调用法](#事件回调用法)
+    - [Props 参数说明](#props-参数说明-1)
+    - [暴露方法说明](#暴露方法说明)
+    - [类型定义](#类型定义-1)
+    - [完整示例](#完整示例-1)
+    - [事件回调用法](#事件回调用法-1)
+  - [常见问题与注意事项](#常见问题与注意事项)
 
 ---
 
@@ -27,9 +39,48 @@
 ## React 组件用法
 
 ### 引入方式
-```tsx
-import RedPacketRain, { RedPacketRainProps, RedPacketRainRef } from '你的包路径';
+
+#### 1. 安装依赖
+
+使用 npm：
+```bash
+npm install @ahmiao666/red-packet-rain-react
+npm install @ahmiao666/red-packet-rain-vue
 ```
+使用 yarn：
+```bash
+yarn add @ahmiao666/red-packet-rain-react
+npm install @ahmiao666/red-packet-rain-vue
+```
+使用 pnpm：
+```bash
+pnpm add @ahmiao666/red-packet-rain-react
+npm install @ahmiao666/red-packet-rain-vue
+```
+
+#### 2. 组件引入
+
+ESM 方式：
+```tsx
+import RedPacketRain, { RedPacketRainProps, RedPacketRainRef } from '@ahmiao666/red-packet-rain-react';
+import type {
+  RedPacketRainRef,
+  RedPacketClickEvent,
+  AnimationState,
+  PerformanceStats,
+  ...
+} from "@ahmiao666/red-packet-rain-react";
+```
+
+CommonJS 方式：
+```js
+const RedPacketRain = require('dist-core/RedPacketRainEngine.esm.js').default;
+```
+
+#### 3. Vite/Webpack/TS 支持
+- 推荐使用 Vite、Webpack 等现代构建工具，支持 TypeScript 类型推断。
+- 如需类型提示，确保 tsconfig.json 包含 node_modules 类型路径。
+- 静态资源（如红包图片）建议放在 public 或 assets 目录下。
 
 ### Props 参数说明
 | 参数名                | 类型                                   | 说明 |
@@ -62,12 +113,130 @@ import RedPacketRain, { RedPacketRainProps, RedPacketRainRef } from '你的包�
 | getPerformanceMode() | 获取当前性能模式 |
 
 ### 类型定义
-- `RedPacketRainConfig`、`RedPacketClickEvent`、`AnimationState`、`PerformanceStats` 等类型详见 [RedPacketRainEngine-API-zh_CN.md](./RedPacketRainEngine-API-zh_CN.md)
+
+#### RedPacketRainConfig 配置参数
+```ts
+export interface RedPacketRainConfig {
+  containerWidth: number | string; // 容器宽度
+  containerHeight: number | string; // 容器高度
+  count: number; // 红包总数
+  density: number; // 红包生成密度
+  speed: { min: number; max: number }; // 红包下落速度范围
+  size: { width: number; height: number }; // 红包尺寸
+  rotation?: boolean; // 是否启用旋转
+  rotationSpeed?: { min: number; max: number }; // 旋转速度范围
+  enablePerformanceMode?: boolean; // 性能模式
+  enableFrameRateLimit?: boolean; // 是否启用帧率限制
+  debugMode?: boolean; // 调试模式
+  maxFPS?: number; // 最大帧率
+  qualityMaxFPS?: number; // 高质量最大帧率
+  clickEffect?: boolean; // 是否开启点击特效
+  redPacketImage?: string | HTMLImageElement; // 红包图片
+  customStyles?: { backgroundColor?: string; borderColor?: string }; // 自定义样式
+  redPackets?: number | any[]; // 红包数据
+  isSpecialFn?: ((item: any) => boolean) | string; // 特殊红包判断
+  isParticle?: boolean; // 是否启用粒子特效
+}
+```
+
+#### RedPacket 红包对象
+```ts
+export interface RedPacket {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
+  rotation: number;
+  rotationSpeed: number;
+  scale: number;
+  opacity: number;
+  collected: boolean;
+  value?: number;
+  type?: "normal" | "special" | "bonus";
+  originalData?: any;
+}
+```
+
+#### RedPacketClickEvent 点击事件参数
+```ts
+export interface RedPacketClickEvent {
+  redPacket: RedPacket;
+  x: number;
+  y: number;
+  value?: number;
+}
+```
+
+#### AnimationState 动画状态
+```ts
+export interface AnimationState {
+  isRunning: boolean;
+  isPaused: boolean;
+  totalCollected: number;
+  currentRedPackets: RedPacket[];
+  fps: number;
+}
+```
+
+#### PerformanceStats 性能统计
+```ts
+export interface PerformanceStats {
+  fps: number;
+  renderTime: number;
+  updateTime: number;
+  totalRedPackets: number;
+  activeRedPackets: number;
+}
+```
+
+#### Particle 粒子对象
+```ts
+export interface Particle {
+  id: string;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  initialSize?: number;
+  opacity: number;
+  color: string;
+  life: number;
+  maxLife: number;
+  gravity: number;
+  friction: number;
+  rotation: number;
+  rotationSpeed: number;
+}
+```
+
+#### ParticleConfig 粒子配置
+```ts
+export interface ParticleConfig {
+  count: number;
+  speed: { min: number; max: number };
+  size: { min: number; max: number };
+  life: { min: number; max: number };
+  colors: string[];
+  gravity: number;
+  friction: number;
+  spread: number;
+}
+```
 
 ### 完整示例
 ```tsx
 import React, { useRef } from 'react';
-import RedPacketRain, { RedPacketRainRef } from '你的包路径';
+import RedPacketRain, { RedPacketRainRef } from '@ahmiao666/red-packet-rain-react';
+import type {
+  RedPacketRainRef,
+  RedPacketClickEvent,
+  AnimationState,
+  PerformanceStats,
+  ...
+} from "@ahmiao666/red-packet-rain-react";
 
 const App = () => {
   const rainRef = useRef<RedPacketRainRef>(null);
@@ -110,13 +279,6 @@ const App = () => {
 
 ---
 
-## Vue 组件用法
-
-### 引入方式
-```ts
-import VueRedPacketRain from '你的包路径/src/vue/VueRedPacketRain.vue';
-```
-
 ### Props 参数说明
 | 参数名                | 类型                    | 说明 |
 |----------------------|-------------------------|------|
@@ -143,7 +305,8 @@ import VueRedPacketRain from '你的包路径/src/vue/VueRedPacketRain.vue';
 | getPerformanceMode() | 获取当前性能模式 |
 
 ### 类型定义
-- `RedPacketRainConfig`、`RedPacketClickEvent`、`AnimationState`、`PerformanceStats` 等类型详见 [RedPacketRainEngine-API-zh_CN.md](./RedPacketRainEngine-API-zh_CN.md)
+
+> Vue 组件类型与 React 完全一致，详见上方类型定义。
 
 ### 完整示例
 ```vue
@@ -170,7 +333,7 @@ import VueRedPacketRain from '你的包路径/src/vue/VueRedPacketRain.vue';
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import VueRedPacketRain from '你的包路径/src/vue/VueRedPacketRain.vue';
+import VueRedPacketRain from '@ahmiao666/red-packet-rain-vue';
 
 const rainRef = ref();
 
