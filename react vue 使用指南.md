@@ -60,7 +60,7 @@ npm install @ahmiao666/red-packet-rain-vue
 
 #### 2. 组件引入
 
-ESM 方式：
+react 方式：
 ```tsx
 import RedPacketRain, { RedPacketRainProps, RedPacketRainRef } from '@ahmiao666/red-packet-rain-react';
 import type {
