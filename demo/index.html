@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>通用红包雨组件 - 演示</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 700;
+      }
+
+      .header p {
+        margin: 10px 0 0;
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .demo-section {
+        margin-bottom: 40px;
+      }
+
+      .demo-section h2 {
+        color: #ff6b6b;
+        border-bottom: 2px solid #ff6b6b;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+
+      .stats-panel {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 15px;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-value {
+        font-size: 2em;
+        font-weight: bold;
+        color: #ff6b6b;
+      }
+
+      .stat-label {
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .controls {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary {
+        background: linear-gradient(45deg, #ff6b6b, #ffa500);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+      }
+
+      .config-panel {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .config-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .config-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .config-item label {
+        min-width: 80px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .config-item input[type="range"] {
+        flex: 1;
+        height: 6px;
+        background: #ddd;
+        border-radius: 3px;
+        outline: none;
+        appearance: none;
+      }
+
+      .config-item input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #ff6b6b;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .config-item .value {
+        min-width: 30px;
+        text-align: center;
+        font-weight: bold;
+        color: #ff6b6b;
+      }
+
+      .canvas-container {
+        position: relative;
+        border: 3px solid #ff6b6b;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 107, 107, 0.1) 0%,
+          rgba(255, 165, 0, 0.1) 100%
+        );
+      }
+
+      .canvas-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ff6b6b" stroke-width="0.5" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        pointer-events: none;
+      }
+
+      #redPacketCanvas {
+        display: block;
+        width: 100%;
+        height: 500px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .instructions {
+        background: linear-gradient(135deg, #e8f4f8 0%, #d4e6f1 100%);
+        border-radius: 8px;
+        padding: 25px;
+        margin-top: 20px;
+      }
+
+      .instructions h3 {
+        color: #2c3e50;
+        margin-top: 0;
+      }
+
+      .instructions ul {
+        padding-left: 20px;
+      }
+
+      .instructions li {
+        margin-bottom: 8px;
+        color: #34495e;
+      }
+
+      .footer {
+        background: #2c3e50;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+      }
+
+      @media (max-width: 768px) {
+        .controls {
+          justify-content: center;
+        }
+
+        .config-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-panel {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🧧 通用红包雨组件</h1>
+        <p>高性能、跨框架的红包雨动画组件演示</p>
+      </div>
+
+      <div class="content">
+        <!-- 统计面板 -->
+        <div class="demo-section">
+          <h2>📊 实时统计</h2>
+          <div class="stats-panel">
+            <div class="stat-item">
+              <div class="stat-value" id="fps">0</div>
+              <div class="stat-label">FPS</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="collected">0</div>
+              <div class="stat-label">已收集</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="totalValue">￥0</div>
+              <div class="stat-label">总价值</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="activeCount">0</div>
+              <div class="stat-label">活跃红包</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="performanceMode">高质量</div>
+              <div class="stat-label">当前模式</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="memoryUsage">0KB</div>
+              <div class="stat-label">内存使用</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 控制面板 -->
+        <div class="demo-section">
+          <h2>🎮 控制面板</h2>
+          <div class="controls">
+            <button class="btn btn-primary" id="startBtn">🚀 开始</button>
+            <button class="btn btn-secondary" id="stopBtn">⏹️ 停止</button>
+            <button class="btn btn-secondary" id="pauseBtn">⏸️ 暂停</button>
+            <button class="btn btn-secondary" id="resumeBtn">▶️ 继续</button>
+            <button class="btn btn-secondary" id="clearBtn">🧹 清空</button>
+            <button class="btn btn-secondary" id="debugBtn">🐛 调试模式</button>
+            <button class="btn btn-secondary" id="performanceBtn">
+              ⚡ 性能模式
+            </button>
+            <button class="btn btn-secondary" id="frameRateLimitBtn">
+              🎯 帧率限制
+            </button>
+          </div>
+        </div>
+
+        <!-- 配置面板 -->
+        <div class="demo-section">
+          <h2>⚙️ 配置调整</h2>
+          <div class="config-panel">
+            <div class="config-grid">
+              <div class="config-item">
+                <label>红包数量</label>
+                <input
+                  type="range"
+                  id="countRange"
+                  min="5"
+                  max="50"
+                  value="15"
+                />
+                <span class="value" id="countValue">15</span>
+              </div>
+              <div class="config-item">
+                <label>红包密度</label>
+                <input
+                  type="range"
+                  id="densityRange"
+                  min="1"
+                  max="10"
+                  value="3"
+                />
+                <span class="value" id="densityValue">3</span>
+              </div>
+              <div class="config-item">
+                <label>最小速度</label>
+                <input
+                  type="range"
+                  id="minSpeedRange"
+                  min="1"
+                  max="5"
+                  value="2"
+                />
+                <span class="value" id="minSpeedValue">2</span>
+              </div>
+              <div class="config-item">
+                <label>最大速度</label>
+                <input
+                  type="range"
+                  id="maxSpeedRange"
+                  min="3"
+                  max="10"
+                  value="5"
+                />
+                <span class="value" id="maxSpeedValue">5</span>
+              </div>
+              <div class="config-item">
+                <label>高质量帧率</label>
+                <input
+                  type="range"
+                  id="qualityFpsRange"
+                  min="60"
+                  max="240"
+                  value="144"
+                  step="1"
+                />
+                <span class="value" id="qualityFpsValue">144</span>
+              </div>
+            </div>
+            <div
+              class="config-note"
+              style="
+                margin-top: 15px;
+                padding: 10px;
+                background: #e8f4f8;
+                border-radius: 6px;
+                font-size: 14px;
+                color: #2c3e50;
+              "
+            >
+              <strong>📝 模式说明:</strong>
+              <br />🔧
+              <strong>基础优化：</strong>所有模式都使用对象池复用，确保内存效率
+              <br />⚡ <strong>性能模式：</strong>简化渲染 +
+              60FPS限制，追求稳定性 <br />🎨
+              <strong>高质量模式：</strong>完整视觉效果 + 自适应帧率，追求美观性
+              <br />🎯
+              <strong>帧率限制：</strong
+              >可以开启/关闭帧率限制，关闭后将追求最高帧率 <br />🎛️
+              <strong>自定义帧率：</strong
+              >可以调整高质量模式的目标帧率（60-240FPS） <br />📊
+              <strong>帧率策略：</strong> <br />&nbsp;&nbsp;&nbsp;&nbsp;•
+              <strong>严格(98%)：</strong>精确控制，更稳定但可能略低于目标
+              <br />&nbsp;&nbsp;&nbsp;&nbsp;•
+              <strong>自适应(90%)：</strong>平衡稳定性和性能，推荐设置
+              <br />&nbsp;&nbsp;&nbsp;&nbsp;•
+              <strong>宽松(80%)：</strong>更容易达到目标FPS，但可能有波动
+              <br />🔍
+              <strong>帧率诊断：</strong
+              >实时监控帧时间、渲染效率，控制台输出详细统计 <br />🖥️
+              <strong>显示器关系：</strong
+              >帧率受显示器刷新率限制，会自动检测并调整建议值
+            </div>
+
+            <div
+              class="config-note"
+              style="
+                margin-top: 10px;
+                padding: 10px;
+                background: #fff3cd;
+                border-radius: 6px;
+                font-size: 14px;
+                color: #856404;
+              "
+            >
+              <strong>🖥️ 帧率与显示器关系:</strong>
+              <br />• <strong>60Hz显示器</strong> →
+              最高显示60FPS（即使软件渲染更高） <br />•
+              <strong>120Hz显示器</strong> →
+              最高显示120FPS（这就是为什么看到120而不是144） <br />•
+              <strong>144Hz显示器</strong> → 最高显示144FPS（完美匹配） <br />•
+              <strong>原理</strong
+              >：浏览器VSync自动同步到显示器刷新率，超出部分被丢弃 <br />•
+              <strong>测试</strong>：系统会自动检测您的显示器并给出最优建议
+            </div>
+          </div>
+        </div>
+
+        <!-- 红包雨画布 -->
+        <div class="demo-section">
+          <h2>🎨 红包雨展示</h2>
+          <div class="canvas-container">
+            <canvas id="redPacketCanvas" width="800" height="500"></canvas>
+          </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="instructions">
+          <h3>📖 使用说明</h3>
+          <ul>
+            <li>🎯 点击红包进行收集，每个红包都有随机的价值</li>
+            <li>⚡ 金色红包为特殊红包，价值更高</li>
+            <li>🎛️ 使用滑块实时调整红包参数</li>
+            <li>📊 观察FPS和性能统计</li>
+            <li>📱 支持触摸设备操作</li>
+            <li>🐛 点击"调试模式"按钮显示红包碰撞边界（绿色虚线框）</li>
+            <li>⚡ 点击"性能模式"按钮切换性能模式和高质量模式</li>
+            <li>
+              🔍 <strong>性能模式测试</strong>：简化渲染、60FPS限制、对象池复用
+            </li>
+            <li>
+              🎨
+              <strong>高质量模式测试</strong
+              >：完整视觉效果、144FPS限制、对象池复用
+            </li>
+            <li>
+              🎯 <strong>帧率限制开关</strong>：点击"🎯
+              帧率限制"按钮可开启/关闭帧率限制
+            </li>
+            <li>
+              📊 <strong>帧率策略调节</strong>：点击"📊
+              策略"按钮切换帧率控制策略（自适应/宽松/严格）
+            </li>
+            <li>
+              🎛️
+              <strong>自定义帧率</strong
+              >：使用"高质量帧率"滑块调整高质量模式的目标帧率（60-240FPS）
+            </li>
+            <li>📈 观察不同设置下的实际帧率表现和渲染质量差异</li>
+            <li>
+              🔍
+              <strong>帧率诊断</strong
+              >：FPS显示为"实际FPS/目标FPS"格式，控制台每秒输出详细诊断
+            </li>
+            <li>
+              🖥️
+              <strong>显示器检测</strong
+              >：自动检测显示器刷新率，帮助诊断帧率限制原因
+            </li>
+            <li>
+              ⚠️
+              <strong>注意</strong
+              >：关闭帧率限制会追求最高帧率，可能导致高CPU使用率
+            </li>
+            <li>💻 打开浏览器开发者工具查看详细的性能信息和统计</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { RedPacketRainEngine } from "./dist-core/RedPacketRainEngine.esm.js";
+      // 初始化红包雨
+      const canvas = document.getElementById("redPacketCanvas");
+
+      // 确保Canvas尺寸正确设置
+      const resizeCanvas = () => {
+        const container = canvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        canvas.width = 800;
+        canvas.height = 500;
+        canvas.style.width = "100%";
+        canvas.style.height = "500px";
+      };
+      resizeCanvas();
+
+      // 模拟红包数据
+      const mockRedPackets = [
+        { id: "id1", myFlag: true, value: 100 }, // 特殊红包
+        { id: "id2", myFlag: false, value: 20 },
+        { id: "id3", myFlag: true, value: 150 }, // 特殊红包
+        { id: "id4", myFlag: false, value: 30 },
+        { id: "id5", myFlag: false, value: 200 },
+        { id: "id6", myFlag: true, value: 50 }, // 特殊红包
+        { id: "id7", myFlag: false, value: 80 },
+        { id: "id8", myFlag: false, value: 60 },
+        { id: "id9", myFlag: true, value: 120 }, // 特殊红包
+        { id: "id10", myFlag: false, value: 40 },
+      ];
+
+      const engine = new RedPacketRainEngine(canvas, {
+        containerWidth: 800,
+        containerHeight: 500,
+        enablePerformanceMode: true, // 默认启用性能模式
+        maxFPS: 60, // 性能模式帧率
+        qualityMaxFPS: 144, // 高质量模式帧率
+        enableFrameRateLimit: true, // 默认启用帧率限制
+        redPackets: mockRedPackets,
+        isSpecialFn: "myFlag",
+        isParticle: true,
+      });
+      // 设置粒子配置
+      engine.setParticleConfig({
+        count: 20, // 粒子数量
+        colors: ["#000000",'#008c8c'], // 自定义颜色
+        gravity: 0.5, // 重力强度
+      });
+
+      window.addEventListener("resize", resizeCanvas);
+
+      // 控制按钮事件
+      document
+        .getElementById("startBtn")
+        .addEventListener("click", () => engine.start());
+      document
+        .getElementById("stopBtn")
+        .addEventListener("click", () => engine.stop());
+      document
+        .getElementById("pauseBtn")
+        .addEventListener("click", () => engine.pause());
+      document
+        .getElementById("resumeBtn")
+        .addEventListener("click", () => engine.resume());
+      document
+        .getElementById("clearBtn")
+        .addEventListener("click", () => engine.clear());
+
+      // 调试模式切换
+      const debugBtn = document.getElementById("debugBtn");
+      debugBtn.addEventListener("click", () => {
+        engine.updateConfig({ debugMode: !engine.config.debugMode });
+        debugBtn.textContent = engine.config.debugMode
+          ? "🐛 关闭调试"
+          : "🐛 调试模式";
+        debugBtn.classList.toggle("btn-primary", engine.config.debugMode);
+        debugBtn.classList.toggle("btn-secondary", !engine.config.debugMode);
+        console.log("调试模式:", engine.config.debugMode ? "开启" : "关闭");
+      });
+
+      // 性能模式切换
+      const performanceBtn = document.getElementById("performanceBtn");
+      const initialPerformanceMode = engine.config.enablePerformanceMode;
+      performanceBtn.textContent = initialPerformanceMode
+        ? "⚡ 高质量模式"
+        : "⚡ 性能模式";
+      performanceBtn.classList.toggle("btn-primary", initialPerformanceMode);
+      performanceBtn.classList.toggle("btn-secondary", !initialPerformanceMode);
+
+      // 帧率限制切换
+      const frameRateLimitBtn = document.getElementById("frameRateLimitBtn");
+      const initialFrameRateLimit = engine.config.enableFrameRateLimit;
+      frameRateLimitBtn.textContent = initialFrameRateLimit
+        ? "🎯 关闭限制"
+        : "🎯 启用限制";
+      frameRateLimitBtn.classList.toggle("btn-primary", initialFrameRateLimit);
+      frameRateLimitBtn.classList.toggle(
+        "btn-secondary",
+        !initialFrameRateLimit
+      );
+      frameRateLimitBtn.addEventListener("click", () => {
+        engine.config.enableFrameRateLimit =
+          !engine.config.enableFrameRateLimit;
+        const isEnabled = engine.config.enableFrameRateLimit;
+        frameRateLimitBtn.textContent = isEnabled
+          ? "🎯 关闭限制"
+          : "🎯 启用限制";
+        frameRateLimitBtn.classList.toggle("btn-primary", isEnabled);
+        frameRateLimitBtn.classList.toggle("btn-secondary", !isEnabled);
+        console.log("帧率限制:", isEnabled ? "已启用" : "已关闭");
+        if (!isEnabled) {
+          console.log(
+            "⚠️ 注意：关闭帧率限制后将追求最高帧率，可能导致高CPU使用率"
+          );
+        }
+      });
+      performanceBtn.addEventListener("click", () => {
+        const isPerformanceMode = !engine.getPerformanceMode();
+        engine.setPerformanceMode(isPerformanceMode);
+        performanceBtn.textContent = isPerformanceMode
+          ? "⚡ 高质量模式"
+          : "⚡ 性能模式";
+        performanceBtn.classList.toggle("btn-primary", isPerformanceMode);
+        performanceBtn.classList.toggle("btn-secondary", !isPerformanceMode);
+        const perfInfo = engine.getStats ? engine.getStats() : {};
+        console.log("性能信息:", perfInfo);
+        console.log(
+          `当前帧率限制: ${
+            engine.config.enablePerformanceMode
+              ? engine.config.maxFPS
+              : engine.config.qualityMaxFPS
+          }FPS`
+        );
+        console.log(
+          "注意: 对象池复用在所有模式下都启用，两种模式都有帧率控制（性能模式60FPS，高质量模式144FPS）"
+        );
+        if (
+          !isPerformanceMode &&
+          (engine.config.qualityMaxFPS === 144 ||
+            engine.config.qualityMaxFPS === 120)
+        ) {
+          console.log(
+            "⚠️ 注意：如果帧率停留在120FPS，可能是您的显示器刷新率限制"
+          );
+          console.log("💡 建议：尝试关闭帧率限制来测试设备的真实帧率能力");
+        }
+      });
+
+      // 配置控制事件
+      const setupRangeControl = (rangeId, valueId, configKey) => {
+        const range = document.getElementById(rangeId);
+        const value = document.getElementById(valueId);
+        range.addEventListener("input", (e) => {
+          const val = parseInt(e.target.value);
+          value.textContent = val;
+          if (configKey === "count") {
+            engine.updateConfig({ count: val });
+          } else if (configKey === "density") {
+            engine.updateConfig({ density: val });
+          } else if (configKey === "minSpeed") {
+            engine.updateConfig({
+              speed: { ...engine.config.speed, min: val },
+            });
+          } else if (configKey === "maxSpeed") {
+            engine.updateConfig({
+              speed: { ...engine.config.speed, max: val },
+            });
+          }
+        });
+      };
+      setupRangeControl("countRange", "countValue", "count");
+      setupRangeControl("densityRange", "densityValue", "density");
+      setupRangeControl("minSpeedRange", "minSpeedValue", "minSpeed");
+      setupRangeControl("maxSpeedRange", "maxSpeedValue", "maxSpeed");
+
+      // 高质量模式帧率控制
+      const qualityFpsRange = document.getElementById("qualityFpsRange");
+      const qualityFpsValue = document.getElementById("qualityFpsValue");
+      qualityFpsRange.addEventListener("input", (e) => {
+        const val = parseInt(e.target.value);
+        qualityFpsValue.textContent = val;
+        engine.config.qualityMaxFPS = val;
+        console.log(`高质量模式帧率已设置为: ${val}FPS`);
+        if (!engine.config.enablePerformanceMode) {
+          console.log(`⚡ 当前高质量模式将尝试达到 ${val}FPS`);
+          if (val > 120) {
+            console.log(
+              "⚠️ 注意：如果您的显示器是120Hz，实际帧率可能被限制在120FPS"
+            );
+          }
+        }
+      });
+
+      // 检测显示器刷新率
+      const detectRefreshRate = () => {
+        let frameCount = 0;
+        const startTime = performance.now();
+        const detectFrame = (currentTime) => {
+          frameCount++;
+          if (currentTime - startTime >= 1000) {
+            const detectedFPS = frameCount;
+          } else {
+            requestAnimationFrame(detectFrame);
+          }
+        };
+        requestAnimationFrame(detectFrame);
+      };
+      setTimeout(detectRefreshRate, 1000);
+
+      // 统计面板联动（假设真实引擎有事件或方法获取统计数据）
+      function updateStatsPanel() {
+        // 性能统计
+        const stats = engine.getStats ? engine.getStats() : {};
+        // 收集统计
+        const collection = engine.getCollectionStats
+          ? engine.getCollectionStats()
+          : {};
+        // 性能模式
+        const isPerformance = engine.getPerformanceMode
+          ? engine.getPerformanceMode()
+          : false;
+        // 帧率策略
+        const strategy = engine.config.frameRateStrategy || "adaptive";
+        // 内存估算
+        const memoryUsage =
+          (((engine.poolSize || 50) * 200) / 1024).toFixed(1) + "KB";
+
+        document.getElementById("fps").textContent = stats.fps ?? 0;
+        document.getElementById("collected").textContent =
+          collection.totalCollected ?? 0;
+        document.getElementById("totalValue").textContent = `￥${
+          collection.totalValue ?? 0
+        }`;
+        document.getElementById("activeCount").textContent =
+          stats.activeRedPackets ?? 0;
+        document.getElementById("performanceMode").textContent =
+          (isPerformance ? "性能模式" : "高质量") + `(${strategy}策略)`;
+        document.getElementById("memoryUsage").textContent = memoryUsage;
+      }
+      // 如果有事件/回调可用，建议定时刷新统计面板
+      setInterval(updateStatsPanel, 500);
+
+      // // 自动开始
+      engine.start();
+    </script>
+  </body>
+</html>
