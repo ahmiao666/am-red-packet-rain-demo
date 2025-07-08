@@ -7,7 +7,45 @@
 [![license](https://img.shields.io/npm/l/red-packet-rain.svg)](https://github.com/ahmiao666/am-red-packet-rain-demo/issues)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-一个高性能、跨框架的红包雨组件，支持 React 和 Vue，具有完整的性能控制和诊断功能。
+# 红包雨引擎（RedPacketRainEngine）详细文档
+
+## 目录
+- [🎉 Red Packet Rain](#-red-packet-rain)
+- [红包雨引擎（RedPacketRainEngine）详细文档](#红包雨引擎redpacketrainengine详细文档)
+  - [目录](#目录)
+  - [简介](#简介)
+  - [✨ 特性](#-特性)
+  - [📦 安装](#-安装)
+  - [核心类型定义（types.ts）](#核心类型定义typests)
+    - [RedPacket 红包对象](#redpacket-红包对象)
+    - [RedPacketRainConfig 配置参数](#redpacketrainconfig-配置参数)
+    - [RedPacketClickEvent 点击事件回调参数](#redpacketclickevent-点击事件回调参数)
+    - [AnimationState 动画状态](#animationstate-动画状态)
+    - [PerformanceStats 性能统计](#performancestats-性能统计)
+    - [Particle 粒子对象](#particle-粒子对象)
+    - [ParticleConfig 粒子配置](#particleconfig-粒子配置)
+  - [红包雨引擎 API（RedPacketRainEngine.ts）](#红包雨引擎-apiredpacketrainenginets)
+    - [构造函数](#构造函数)
+    - [公开方法](#公开方法)
+    - [事件回调](#事件回调)
+  - [如何使用](#如何使用)
+    - [基础用法](#基础用法)
+    - [自定义红包数据](#自定义红包数据)
+    - [特殊红包与自定义判断](#特殊红包与自定义判断)
+    - [粒子特效](#粒子特效)
+  - [常见问题与注意事项](#常见问题与注意事项)
+  - [🐛 常见问题](#-常见问题)
+    - [Q: 为什么 FPS 达不到设定值？](#q-为什么-fps-达不到设定值)
+    - [Q: 如何优化性能？](#q-如何优化性能)
+    - [Q: 移动设备卡顿怎么办？](#q-移动设备卡顿怎么办)
+
+---
+
+## 简介
+
+`RedPacketRainEngine` 是一个高性能、可扩展的红包雨动画引擎，支持自定义红包样式、粒子特效、性能模式、点击事件等丰富功能，适用于 React/Vue/Web 等多种前端场景。
+
+---
 
 ## ✨ 特性
 
@@ -37,355 +75,8 @@ pnpm add @ahmiao666/red-packet-rain-react
 pnpm add @ahmiao666/red-packet-rain-vue
 ```
 
-## 🚀 快速开始
 
-### React 使用
 
-```tsx
-import React, { useRef } from 'react';
-import RedPacketRain, { RedPacketRainRef } from '@ahmiao666/red-packet-rain-react';
-
-function App() {
-  const rainRef = useRef<RedPacketRainRef>(null);
-
-  const handleRedPacketClick = (event) => {
-    console.log('收集到红包:', event.value);
-  };
-
-  return (
-    <div>
-      <RedPacketRain
-        ref={rainRef}
-        config={{
-          count: 15,
-          density: 3,
-          enablePerformanceMode: true
-        }}
-        onRedPacketClick={handleRedPacketClick}
-      />
-      
-      <button onClick={() => rainRef.current?.start()}>
-        开始红包雨
-      </button>
-    </div>
-  );
-}
-
-export default App;
-```
-
-### Vue 使用
-
-```vue
-<template>
-  <div>
-    <VueRedPacketRain
-      ref="rainRef"
-      :config="config"
-      @red-packet-click="handleRedPacketClick"
-    />
-    
-    <button @click="start">开始红包雨</button>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, reactive } from 'vue';
-import { VueRedPacketRain } from '@ahmiao666/red-packet-rain-vue';
-import type { RedPacketClickEvent } from '@ahmiao666/red-packet-rain-vue';
-
-const rainRef = ref();
-
-const config = reactive({
-  count: 15,
-  density: 3,
-  enablePerformanceMode: true
-});
-
-const handleRedPacketClick = (event: RedPacketClickEvent) => {
-  console.log('收集到红包:', event.value);
-};
-
-const start = () => {
-  rainRef.value?.start();
-};
-</script>
-```
-
-## ⚙️ 配置选项
-
-```typescript
-interface RedPacketRainConfig {
-  // 基本设置
-  containerWidth: number;        // 容器宽度
-  containerHeight: number;       // 容器高度
-  count: number;                 // 红包数量 (5-50)
-  density: number;               // 红包密度 (1-10)
-  
-  // 速度控制
-  speed: {
-    min: number;                 // 最小速度 (1-5)
-    max: number;                 // 最大速度 (3-10)
-  };
-  
-  // 性能设置
-  enablePerformanceMode: boolean; // 性能模式
-  enableFrameRateLimit: boolean;  // 帧率限制
-  frameRateStrategy: 'strict' | 'adaptive' | 'loose'; // 帧率策略
-  maxFPS: number;                // 性能模式帧率 (默认60)
-  qualityMaxFPS: number;         // 高质量模式帧率 (默认144)
-  
-  // 调试和特效
-  debugMode: boolean;            // 调试模式
-  clickEffect: boolean;          // 点击特效
-  
-  // 外观设置
-  rotation: boolean;             // 旋转动画
-  size: {
-    width: number;               // 红包宽度
-    height: number;              // 红包高度
-  };
-}
-```
-
-## 🎮 API 参考
-
-### React 组件 Props
-
-| 属性                     | 类型                                   | 默认值 | 描述             |
-| ------------------------ | -------------------------------------- | ------ | ---------------- |
-| `config`                 | `Partial<RedPacketRainConfig>`         | `{}`   | 配置对象         |
-| `showControls`           | `boolean`                              | `true` | 显示内置控制界面 |
-| `autoStart`              | `boolean`                              | `true` | 自动启动         |
-| `onRedPacketClick`       | `(event: RedPacketClickEvent) => void` | -      | 红包点击回调     |
-| `onAnimationStateChange` | `(state: AnimationState) => void`      | -      | 动画状态变化回调 |
-| `onPerformanceUpdate`    | `(stats: PerformanceStats) => void`    | -      | 性能统计回调     |
-
-### React 组件方法
-
-```typescript
-interface RedPacketRainRef {
-  start(): void;                           // 启动
-  stop(): void;                            // 停止
-  pause(): void;                           // 暂停
-  resume(): void;                          // 恢复
-  clear(): void;                           // 清空
-  updateConfig(config: Partial<RedPacketRainConfig>): void; // 更新配置
-  getStats(): PerformanceStats;            // 获取统计
-  togglePerformanceMode(): boolean;        // 切换性能模式
-  setPerformanceMode(enabled: boolean): void; // 设置性能模式
-  getPerformanceMode(): boolean;           // 获取性能模式
-}
-```
-
-### Vue 组件
-
-```typescript
-// Props
-interface VueRedPacketRainProps {
-  config?: Partial<RedPacketRainConfig>;
-  showControls?: boolean;
-  autoStart?: boolean;
-}
-
-// Events
-interface VueRedPacketRainEmits {
-  'red-packet-click': [event: RedPacketClickEvent];
-  'animation-state-change': [state: AnimationState];
-  'performance-update': [stats: PerformanceStats];
-}
-
-// 暴露的方法（通过 ref 调用）
-const rainRef = ref();
-rainRef.value?.start();
-rainRef.value?.stop();
-rainRef.value?.updateConfig(newConfig);
-```
-
-## 🎯 性能模式对比
-
-| 特性       | 性能模式 | 高质量模式 |
-| ---------- | -------- | ---------- |
-| 目标帧率   | 60 FPS   | 144 FPS    |
-| 渲染复杂度 | 简化     | 完整       |
-| 视觉效果   | 基础     | 丰富       |
-| 内存使用   | 优化     | 正常       |
-| CPU 使用   | 低       | 高         |
-| 适用场景   | 低端设备 | 高端设备   |
-
-## 💡 最佳实践
-
-### 根据设备选择配置
-
-```typescript
-const getOptimalConfig = (deviceType: 'mobile' | 'desktop') => {
-  if (deviceType === 'mobile') {
-    return {
-      enablePerformanceMode: true,
-      maxFPS: 60,
-      frameRateStrategy: 'adaptive',
-      count: 10,
-      density: 2
-    };
-  } else {
-    return {
-      enablePerformanceMode: false,
-      qualityMaxFPS: 144,
-      frameRateStrategy: 'strict',
-      count: 20,
-      density: 4
-    };
-  }
-};
-```
-
-### 事件处理优化
-
-```typescript
-const handleRedPacketClick = useCallback((event: RedPacketClickEvent) => {
-  // 预计算值
-  const value = event.value || 0;
-  const isSpecial = event.redPacket.type === 'special';
-  
-  // 批量更新状态
-  setStats(prev => ({
-    ...prev,
-    collected: prev.collected + 1,
-    totalValue: prev.totalValue + value
-  }));
-}, []);
-```
-
-### 内存管理
-
-```typescript
-useEffect(() => {
-  return () => {
-    // 组件卸载时清理资源
-    rainRef.current?.stop();
-    rainRef.current?.clear();
-  };
-}, []);
-```
-
-## 📊 性能监控
-
-```typescript
-const handlePerformanceUpdate = (stats: PerformanceStats) => {
-  console.log('性能统计:', {
-    fps: stats.fps,                    // 当前 FPS
-    renderTime: stats.renderTime,      // 渲染时间 (ms)
-    updateTime: stats.updateTime,      // 更新时间 (ms)
-    activeRedPackets: stats.activeRedPackets, // 活跃红包数
-    totalRedPackets: stats.totalRedPackets    // 总红包数
-  });
-  
-  // 性能警告
-  if (stats.fps < 30) {
-    console.warn('FPS 过低:', stats.fps);
-  }
-};
-```
-
-## 🌐 浏览器支持
-
-- Chrome >= 80
-- Firefox >= 75
-- Safari >= 13
-- Edge >= 80
-- 移动端浏览器支持
-
-## 📱 移动端优化
-
-```typescript
-// 移动端推荐配置
-const mobileConfig = {
-  enablePerformanceMode: true,
-  maxFPS: 60,
-  frameRateStrategy: 'adaptive',
-  count: 8,
-  density: 2,
-  speed: { min: 1, max: 3 }
-};
-```
-
-## 🐛 常见问题
-
-### Q: 为什么 FPS 达不到设定值？
-A: 可能原因：
-1. 显示器刷新率限制（如 120Hz 显示器最高 120FPS）
-2. 设备性能不足
-3. 浏览器 VSync 机制限制
-
-### Q: 如何优化性能？
-A: 优化建议：
-1. 启用性能模式
-2. 减少红包数量和密度
-3. 使用自适应帧率策略
-4. 关闭不必要的视觉效果
-
-### Q: 移动设备卡顿怎么办？
-A: 移动端优化：
-1. 启用性能模式
-2. 设置较低的目标帧率（30-60FPS）
-3. 减少红包数量
-4. 使用宽松帧率策略
-
-# 红包雨引擎（RedPacketRainEngine）详细文档
-
-## 目录
-- [🎉 Red Packet Rain](#-red-packet-rain)
-  - [✨ 特性](#-特性)
-  - [📦 安装](#-安装)
-  - [🚀 快速开始](#-快速开始)
-    - [React 使用](#react-使用)
-    - [Vue 使用](#vue-使用)
-  - [⚙️ 配置选项](#️-配置选项)
-  - [🎮 API 参考](#-api-参考)
-    - [React 组件 Props](#react-组件-props)
-    - [React 组件方法](#react-组件方法)
-    - [Vue 组件](#vue-组件)
-  - [🎯 性能模式对比](#-性能模式对比)
-  - [💡 最佳实践](#-最佳实践)
-    - [根据设备选择配置](#根据设备选择配置)
-    - [事件处理优化](#事件处理优化)
-    - [内存管理](#内存管理)
-  - [📊 性能监控](#-性能监控)
-  - [🌐 浏览器支持](#-浏览器支持)
-  - [📱 移动端优化](#-移动端优化)
-  - [🐛 常见问题](#-常见问题)
-    - [Q: 为什么 FPS 达不到设定值？](#q-为什么-fps-达不到设定值)
-    - [Q: 如何优化性能？](#q-如何优化性能)
-    - [Q: 移动设备卡顿怎么办？](#q-移动设备卡顿怎么办)
-- [红包雨引擎（RedPacketRainEngine）详细文档](#红包雨引擎redpacketrainengine详细文档)
-  - [目录](#目录)
-  - [简介](#简介)
-  - [核心类型定义（types.ts）](#核心类型定义typests)
-    - [RedPacket 红包对象](#redpacket-红包对象)
-    - [RedPacketRainConfig 配置参数](#redpacketrainconfig-配置参数)
-    - [RedPacketClickEvent 点击事件回调参数](#redpacketclickevent-点击事件回调参数)
-    - [AnimationState 动画状态](#animationstate-动画状态)
-    - [PerformanceStats 性能统计](#performancestats-性能统计)
-    - [Particle 粒子对象](#particle-粒子对象)
-    - [ParticleConfig 粒子配置](#particleconfig-粒子配置)
-  - [红包雨引擎 API（RedPacketRainEngine.ts）](#红包雨引擎-apiredpacketrainenginets)
-    - [构造函数](#构造函数)
-    - [公开方法](#公开方法)
-    - [事件回调](#事件回调)
-  - [如何使用](#如何使用)
-    - [基础用法](#基础用法)
-    - [自定义红包数据](#自定义红包数据)
-    - [特殊红包与自定义判断](#特殊红包与自定义判断)
-    - [粒子特效](#粒子特效)
-  - [常见问题与注意事项](#常见问题与注意事项)
-
----
-
-## 简介
-
-`RedPacketRainEngine` 是一个高性能、可扩展的红包雨动画引擎，支持自定义红包样式、粒子特效、性能模式、点击事件等丰富功能，适用于 React/Vue/Web 等多种前端场景。
-
----
 
 ## 核心类型定义（types.ts）
 
@@ -580,5 +271,28 @@ enigne.setParticleConfig({
 
 ---
 
-如需更多高级用法或遇到问题，欢迎查阅源码或联系作者。 
+
+## 🐛 常见问题
+
+### Q: 为什么 FPS 达不到设定值？
+A: 可能原因：
+1. 显示器刷新率限制（如 120Hz 显示器最高 120FPS）
+2. 设备性能不足
+3. 浏览器 VSync 机制限制
+
+### Q: 如何优化性能？
+A: 优化建议：
+1. 启用性能模式
+2. 减少红包数量和密度
+3. 使用自适应帧率策略
+4. 关闭不必要的视觉效果
+
+### Q: 移动设备卡顿怎么办？
+A: 移动端优化：
+1. 启用性能模式
+2. 设置较低的目标帧率（30-60FPS）
+3. 减少红包数量
+4. 使用宽松帧率策略
+
+
 
