@@ -223,7 +223,7 @@ onMounted(() => {
       </div>
 
       <!-- Vue红包雨组件 -->
-      <div class="red-packet-rain-container">
+      <div class="red-packet-rain-container-demo">
         <RedPacketRain
           ref="redPacketRainRef"
           :config="config"
@@ -371,12 +371,12 @@ onMounted(() => {
 }
 
 /* 红包雨组件容器样式 */
-.red-packet-rain-container {
+.red-packet-rain-container-demo {
   width: 100%;
   border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
   overflow: hidden;
   margin-bottom: 20px;
+  border: 1px solid #ccc;
 }
 
 @keyframes float-up {
