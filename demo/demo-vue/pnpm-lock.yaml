@@ -8,12 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@ahmiao666/red-packet-rain-react':
-        specifier: ^1.0.6
-        version: 1.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ahmiao666/red-packet-rain-vue':
-        specifier: ^1.0.0
-        version: 1.0.4(vue@3.5.17(typescript@5.8.3))
+        specifier: ^1.0.11
+        version: 1.0.11(vue@3.5.17(typescript@5.8.3))
       vue:
         specifier: ^3.5.17
         version: 3.5.17(typescript@5.8.3)
@@ -36,15 +33,8 @@ importers:
 
 packages:
 
-  '@ahmiao666/red-packet-rain-react@1.0.6':
-    resolution: {integrity: sha512-rzUOL7ieO/6sykHoZmvfmHIxZ/Xw4yRsJErW5l6Xm1bqbT2ro43h7mbhgUsSpZPlHEwheP1yGf/3VXrjit4DSQ==}
-    engines: {node: '>=22.0.0', npm: '>=10.9.2'}
-    peerDependencies:
-      react: '>=19.x'
-      react-dom: '>=19.x'
-
-  '@ahmiao666/red-packet-rain-vue@1.0.4':
-    resolution: {integrity: sha512-ayV+L2cSuJpPHA+o2tBJTMEkMftoT1IPPjGYb+QDXxqCmg3wUL+qcQyB0QW4/mQkljjNVWfr0BYXjglQMu8WkQ==}
+  '@ahmiao666/red-packet-rain-vue@1.0.11':
+    resolution: {integrity: sha512-zTBeLHU7UcpsYw2o428DvES8pkASP8kovBlLqbscM7uxwB/LNnxRAfPNLgaNmo22mB6ISTfQAPwMsC+0Xx2uag==}
     engines: {node: '>=22.0.0', npm: '>=10.9.2'}
     peerDependencies:
       vue: '>=3.0.0'
@@ -465,22 +455,10 @@ packages:
     resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  react-dom@19.1.0:
-    resolution: {integrity: sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==}
-    peerDependencies:
-      react: ^19.1.0
-
-  react@19.1.0:
-    resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
-    engines: {node: '>=0.10.0'}
-
   rollup@4.44.2:
     resolution: {integrity: sha512-PVoapzTwSEcelaWGth3uR66u7ZRo6qhPHc0f2uRO9fX6XDVNrIiGYS0Pj9+R8yIIYSD/mCx2b16Ws9itljKSPg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
-
-  scheduler@0.26.0:
-    resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -554,12 +532,7 @@ packages:
 
 snapshots:
 
-  '@ahmiao666/red-packet-rain-react@1.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-
-  '@ahmiao666/red-packet-rain-vue@1.0.4(vue@3.5.17(typescript@5.8.3))':
+  '@ahmiao666/red-packet-rain-vue@1.0.11(vue@3.5.17(typescript@5.8.3))':
     dependencies:
       vue: 3.5.17(typescript@5.8.3)
 
@@ -889,13 +862,6 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  react-dom@19.1.0(react@19.1.0):
-    dependencies:
-      react: 19.1.0
-      scheduler: 0.26.0
-
-  react@19.1.0: {}
-
   rollup@4.44.2:
     dependencies:
       '@types/estree': 1.0.8
@@ -921,8 +887,6 @@ snapshots:
       '@rollup/rollup-win32-ia32-msvc': 4.44.2
       '@rollup/rollup-win32-x64-msvc': 4.44.2
       fsevents: 2.3.3
-
-  scheduler@0.26.0: {}
 
   source-map-js@1.2.1: {}
 

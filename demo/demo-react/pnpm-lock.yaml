@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ahmiao666/red-packet-rain-react':
-        specifier: ^1.0.6
-        version: 1.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^1.0.11
+        version: 1.0.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -54,8 +54,8 @@ importers:
 
 packages:
 
-  '@ahmiao666/red-packet-rain-react@1.0.6':
-    resolution: {integrity: sha512-rzUOL7ieO/6sykHoZmvfmHIxZ/Xw4yRsJErW5l6Xm1bqbT2ro43h7mbhgUsSpZPlHEwheP1yGf/3VXrjit4DSQ==}
+  '@ahmiao666/red-packet-rain-react@1.0.11':
+    resolution: {integrity: sha512-TH2WEwP3wfUOw4tqawDchTP8quC2BmKnpUdmNr4pa1m64x+vUzJk1Dl/GnmMEApbWx5qUtZ4Dwoalb+kYUSglQ==}
     engines: {node: '>=22.0.0', npm: '>=10.9.2'}
     peerDependencies:
       react: '>=19.x'
@@ -1115,7 +1115,7 @@ packages:
 
 snapshots:
 
-  '@ahmiao666/red-packet-rain-react@1.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@ahmiao666/red-packet-rain-react@1.0.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
